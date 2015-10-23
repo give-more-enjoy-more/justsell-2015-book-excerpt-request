@@ -23,16 +23,55 @@ require_once('/var/www/html/justsell/wp-content/themes/justsell/resources/includ
 function display_post_book_excerpt_request_form($book_brand)
 {
 
+	/* Initialize variables */
+	//$post_id = get_the_ID();
+
+	/* Brand specific form title and subtitle. */
+	switch($book_brand):
+	
+		case "ctl":
+			$form_title = '';
+			$form_subtitle = '';
+			break;
+
+		case "ls":
+			$form_title = 'We are all leaders (regardless of title).';
+			$form_subtitle = 'And we lead by example ... one way or the other.<br />Give your sales team a better example (a quick 30-minute read).';
+			break;
+
+		case "lyp":
+			$form_title = 'Get past the eggshells.';
+			$form_subtitle = 'Real talk about contribution, trust, and honesty (it\'ll inspire your sales team ... a quick 5-minute read).';
+			break;
+
+		case "sm":
+			$form_title = 'Onboarding made easy.';
+			$form_subtitle = 'Get your new hires ramped up, motivated, and productive ... quickly. Smile & Move is your guide (a fast 20-minute read).';
+			break;
+
+		case "st":
+			$form_title = 'No fluff. No clich&eacute;s. No jargon.';
+			$form_subtitle = 'Just the 8 fundamentals to being more valuable to your prospects, customers, and company.';
+			break;
+
+		default:
+			$form_title = '';
+			$form_subtitle = '';
+			break;
+
+	endswitch;
+
+
 	/* Build the form and set it to the form_output_string variable. */
 	$form_output_string = '
-		<section class="post-pdf-request" id="post-book-excerpt-request-form">
+		<section class="request-form post-book-excerpt-request" id="post-book-excerpt-request-form">
 			<div class="post-book-excerpt-request-form-container">
-				<h3 class="title">Print it out. Stay inspired.</h3>
-				<p class="subtitle">Get a printable version of this content to post or share.</p>
+				<h3 class="title">'. $form_title .'</h3>
+				<p class="subtitle">'. $form_subtitle .'</p>
 				<form action="'. $_SERVER['REQUEST_URI'] .'" method="post" name="bookExcerptFormReqest" class="single-input-form" id="book-excerpt-form-request">
 					<input name="postBookExcerptRequestEmail" type="text" placeholder="Enter your email here">
 					<input name="postBookExcerptRequestBrand" type="hidden" value="'. $book_brand .'">
-					<input name="postBookExcerptRequestSubmit" type="submit" value="Get it now!">
+					<input name="postBookExcerptRequestSubmit" type="submit" value="Get a book sample">
 				</form>
 			</div>
 		</section>
@@ -50,7 +89,7 @@ function post_book_excerpt_request_control( $atts )
 
 	/* Initialize variables */
   $shortcode_attributes = shortcode_atts( array(
-      'brand' => 'tt'
+      'brand' => 'tt' /* Default value, but is overridden by shortcode passed var if provided. */
   ), $atts );
 
 	$book_brand = $shortcode_attributes['brand'];
@@ -98,7 +137,7 @@ function process_post_book_excerpt_request_form($book_brand)
 			$error_message .= '<p class="form-error">- '.$error[$i].'</p>';
 		}
 
-		return $error_message . display_post_book_excerpt_request_form();
+		return $error_message . display_post_book_excerpt_request_form($book_brand);
 	}
 	else
 	{
@@ -2234,8 +2273,8 @@ We\'re real people here and we\'d love to help you. Really.
 
 		return '
 			<section class="post-pdf-request">
-				<h3 class="title">Please check your inbox.</h3>
-				<p class="subtitle">The excerpt is on its way.</p>
+				<h3 class="title">Thanks!</h3>
+				<p class="subtitle">We\'re sending your book sample over now.</p>
 			</section>
 		';
 		
